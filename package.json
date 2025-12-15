@@ -1,24 +1,23 @@
 {
-  "name": "my-api",
+  "name": "express-ts-api",
   "private": true,
-  "type": "commonjs",
+  "version": "0.1.0",
+  "type": "module",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "tsc -p tsconfig.json",
-    "start": "node dist/index.js",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio"
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@prisma/client": "^5.22.0",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "zod": "^4.0.0"
   },
   "devDependencies": {
-    "prisma": "^5.22.0",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.6.3",
     "@types/express": "^4.17.21",
-    "@types/node": "^20.14.15"
+    "@types/node": "^20.11.30",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.5"
   }
 }
