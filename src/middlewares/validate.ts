@@ -1,8 +1,8 @@
 import type { Request, Response, NextFunction } from 'express'
-import type { ZodSchema } from 'zod'
+import type { ZodType } from 'zod'
 
 // リクエストボディをバリデーションするミドルウェア
-export const validateBody = (schema: ZodSchema) => {
+export const validateBody = (schema: ZodType) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
       req.body = schema.parse(req.body)
@@ -14,7 +14,7 @@ export const validateBody = (schema: ZodSchema) => {
 }
 
 // URLパラメータをバリデーションするミドルウェア
-export const validateParams = (schema: ZodSchema) => {
+export const validateParams = (schema: ZodType) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
       req.params = schema.parse(req.params) as any
