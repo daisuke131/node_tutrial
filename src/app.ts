@@ -1,20 +1,20 @@
-// アプリの定義
 import express from 'express'
-import healthRouter from './routes/health.js'
-import echoRouter from './routes/echo.js'
 import { errorHandler } from './middlewares/error.js'
 
 export const app = express()
 
-// ①body を読む
+// JSONボディパーサー
 app.use(express.json())
 
-// ②ルーティング
-app.use('/health', healthRouter)
-app.use('/echo', echoRouter)
+// ヘルスチェックエンドポイント
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' })
+})
 
-// ③エラー
-// 順序を間違えると：
-// req.body が undefined
-// エラーが握りつぶされる
+// ルーティングはここに追加していきます
+// app.use('/users', usersRouter)
+// app.use('/posts', postsRouter)
+// app.use('/favorites', favoritesRouter)
+
+// エラーハンドリング（最後に配置）
 app.use(errorHandler)

@@ -1,0 +1,61 @@
+// Prisma Schema for Blog API
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ユーザーモデル
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 1対多: ユーザーが書いた記事
+  posts     Post[]
+
+  // 多対多: ユーザーがお気に入りした記事
+  favorites Favorite[]
+
+  @@map("users")
+}
+
+// ブログ記事モデル
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  published Boolean  @default(false)
+  authorId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 記事の著者（多対1）
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  // 多対多: この記事をお気に入りしたユーザー
+  favoritedBy Favorite[]
+
+  @@map("posts")
+}
+
+// お気に入り中間テーブル（多対多リレーション）
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  postId    Int
+  createdAt DateTime @default(now())
+
+  // リレーション
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  // 同じユーザーが同じ記事を重複してお気に入りできないようにする
+  @@unique([userId, postId])
+  @@map("favorites")
+}
