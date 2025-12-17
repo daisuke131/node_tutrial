@@ -1,5 +1,6 @@
 import express from 'express'
 import { errorHandler } from './middlewares/error.js'
+import usersRouter from './routes/users.js'
 
 export const app = express()
 
@@ -11,10 +12,8 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' })
 })
 
-// ルーティングはここに追加していきます
-// app.use('/users', usersRouter)
-// app.use('/posts', postsRouter)
-// app.use('/favorites', favoritesRouter)
+// ルーティング
+app.use('/users', usersRouter)
 
 // エラーハンドリング（最後に配置）
 app.use(errorHandler)
