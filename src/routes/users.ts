@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { prisma } from '../lib/prisma.js'
 import { validateBody } from '../middlewares/validate.js'
-import { createUserSchema } from '../schemas/user.schema.js'
+import { createUserSchema, updateUserSchema } from '../schemas/user.schema.js'
 
 const router = Router()
 
@@ -45,6 +45,23 @@ router.get('/:id', async (req, res, next) => {
       res.status(404).json({ error: 'User not found' })
       return
     }
+
+    res.json(user)
+  } catch (error) {
+    next(error)
+  }
+})
+
+// ユーザー更新（PATCH /users/:id）
+router.patch('/:id', validateBody(updateUserSchema), async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const { email, name } = req.body
+
+    const user = await prisma.user.update({
+      where: { id: Number(id) },
+      data: { email, name },
+    })
 
     res.json(user)
   } catch (error) {
