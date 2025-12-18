@@ -7,3 +7,12 @@ services:
             POSTGRES_DB: mydb
         ports:
             - "5432:5432"
+
+    db_test:
+        image: postgres:18.1
+        environment:
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: mydb_test
+        ports:
+            - "5433:5432"
