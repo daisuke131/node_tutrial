@@ -1,0 +1,45 @@
+import { describe, it, expect, beforeEach } from 'vitest'
+import request from 'supertest'
+import { app } from '../../app.js'
+import { prisma } from '../../lib/prisma.js'
+
+describe('User API', () => {
+    // 各テストの前にデータベースをクリーンアップする
+    beforeEach(async () => {
+        await prisma.user.deleteMany()
+    })
+
+    describe('GET /users', () => {
+        it('ユーザー一覧を正常に取得できること', async () => {
+            // 3人分のテストデータをループで作る
+            const count = 3
+            for (let i = 1; i <= count; i++) {
+                await prisma.user.create({
+                    data: { email: `test${i}@example.com`, name: `Test User ${i}` }
+                })
+            }
+
+            const response = await request(app).get('/users')
+
+            expect(response.status).toBe(200)
+            expect(response.body).toHaveLength(count)
+
+            // indexに基づいたデータが含まれているか検証
+            for (let i = 1; i <= count; i++) {
+                expect(response.body).toContainEqual(
+                    expect.objectContaining({
+                        email: `test${i}@example.com`,
+                        name: `Test User ${i}`
+                    })
+                )
+            }
+        })
+
+        it('ユーザーが一人もいない場合は空配列を返すこと', async () => {
+            const response = await request(app).get('/users')
+
+            expect(response.status).toBe(200)
+            expect(response.body).toEqual([])
+        })
+    })
+})
