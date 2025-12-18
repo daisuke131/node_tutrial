@@ -139,5 +139,51 @@ describe('User API', () => {
 
             expect(response.status).toBe(404)
         })
+
+        it('不正な形式のメールアドレスの場合、400エラーを返すこと', async () => {
+            // テストデータを1件作成
+            const user = await prisma.user.create({
+                data: { email: 'valid@example.com', name: 'Test User' }
+            })
+
+            const response = await request(app)
+                .patch(`/users/${user.id}`)
+                .send({ email: 'invalid-email' })
+
+            expect(response.status).toBe(400)
+            expect(response.body.error).toBe('Validation Error')
+        })
+
+        it('名前が空文字の場合、400エラーを返すこと', async () => {
+            // テストデータを1件作成
+            const user = await prisma.user.create({
+                data: { email: 'valid@example.com', name: 'Test User' }
+            })
+
+            const response = await request(app)
+                .patch(`/users/${user.id}`)
+                .send({ name: '' })
+
+            expect(response.status).toBe(400)
+            expect(response.body.error).toBe('Validation Error')
+        })
+
+        it('既に存在するメールアドレスの場合、409エラーを返すこと', async () => {
+            // テストデータを2件作成
+            const user1 = await prisma.user.create({
+                data: { email: 'user1@example.com', name: 'User 1' }
+            })
+            await prisma.user.create({
+                data: { email: 'user2@example.com', name: 'User 2' }
+            })
+
+            // user1のメールをuser2のものに変更しようとする
+            const response = await request(app)
+                .patch(`/users/${user1.id}`)
+                .send({ email: 'user2@example.com' })
+
+            expect(response.status).toBe(409)
+            expect(response.body.error).toBe('Unique constraint violation')
+        })
     })
 })
