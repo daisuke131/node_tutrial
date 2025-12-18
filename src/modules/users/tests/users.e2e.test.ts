@@ -101,4 +101,29 @@ describe('User API (E2E)', () => {
             expect(response.body.data.name).toBe('New Name')
         })
     })
+
+    describe('DELETE /users/:id', () => {
+        it('should delete user if exists', async () => {
+            const user = await prisma.user.create({
+                data: { email: 'delete@example.com', name: 'Delete Me' }
+            })
+
+            const response = await request(app).delete(`/users/${user.id}`)
+
+            expect(response.status).toBe(200)
+            expect(response.body.success).toBe(true)
+
+            // Confirm deleted from DB
+            const check = await prisma.user.findUnique({ where: { id: user.id } })
+            expect(check).toBeNull()
+        })
+
+        it('should return 404 if user to delete does not exist', async () => {
+            const response = await request(app).delete('/users/99999')
+
+            expect(response.status).toBe(404)
+            expect(response.body.success).toBe(false)
+            expect(response.body.error.code).toBe('NOT_FOUND')
+        })
+    })
 })

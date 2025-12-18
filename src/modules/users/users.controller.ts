@@ -45,4 +45,14 @@ export class UsersController {
             next(error)
         }
     }
+
+    remove = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const id = Number(req.params.id)
+            await this.service.deleteUser(id)
+            res.status(200).json(successResponse(null))
+        } catch (error) {
+            next(error)
+        }
+    }
 }

@@ -29,4 +29,10 @@ export class UsersService {
         await this.getUserById(id)
         return this.repository.update(id, data)
     }
+
+    async deleteUser(id: number): Promise<void> {
+        // Ensure user exists first
+        await this.getUserById(id)
+        await this.repository.delete(id)
+    }
 }
