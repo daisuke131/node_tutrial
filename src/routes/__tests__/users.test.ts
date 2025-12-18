@@ -42,4 +42,29 @@ describe('User API', () => {
             expect(response.body).toEqual([])
         })
     })
+
+    describe('GET /users/:id', () => {
+        it('存在するIDを指定した場合、ユーザー情報を取得できること', async () => {
+            // テストデータを1件作成
+            const user = await prisma.user.create({
+                data: { email: 'findme@example.com', name: 'Find Me' }
+            })
+
+            const response = await request(app).get(`/users/${user.id}`)
+
+            expect(response.status).toBe(200)
+            expect(response.body).toEqual(expect.objectContaining({
+                id: user.id,
+                email: user.email,
+                name: user.name
+            }))
+        })
+
+        it('存在しないIDを指定した場合、404エラーを返すこと', async () => {
+            const response = await request(app).get('/users/999')
+
+            expect(response.status).toBe(404)
+            expect(response.body).toEqual({ error: 'User not found' })
+        })
+    })
 })
