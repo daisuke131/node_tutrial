@@ -23,4 +23,14 @@ router.post('/', validateBody(createUserSchema), async (req, res, next) => {
   }
 })
 
+// 全ユーザー取得（GET /users）
+router.get('/', async (req, res, next) => {
+  try {
+    const users = await prisma.user.findMany()
+    res.json(users)
+  } catch (error) {
+    next(error)
+  }
+})
+
 export default router
