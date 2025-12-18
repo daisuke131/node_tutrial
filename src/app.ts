@@ -1,19 +1,19 @@
 import express from 'express'
-import { errorHandler } from './middlewares/error.js'
-import usersRouter from './routes/users.js'
+import { errorHandler } from './shared/infra/http/middlewares/error.middleware.js'
+import usersRouter from './modules/users/users.routes.js'
 
 export const app = express()
 
-// JSONボディパーサー
+// Middlewares
 app.use(express.json())
 
-// ヘルスチェックエンドポイント
+// Health Check
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok' })
+  res.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
 
-// ルーティング
+// Routes
 app.use('/users', usersRouter)
 
-// エラーハンドリング（最後に配置）
+// Global Error Handler (Must be last)
 app.use(errorHandler)

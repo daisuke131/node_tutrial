@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "dev": "tsx watch src/main.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "node dist/main.js",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "DATABASE_URL=\"postgresql://user:password@localhost:5433/mydb_test?schema=public\" npx prisma db push --accept-data-loss && DATABASE_URL=\"postgresql://user:password@localhost:5433/mydb_test?schema=public\" vitest run"
