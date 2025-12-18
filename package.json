@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "DATABASE_URL=\"postgresql://user:password@localhost:5433/mydb_test?schema=public\" npx prisma db push --accept-data-loss && DATABASE_URL=\"postgresql://user:password@localhost:5433/mydb_test?schema=public\" vitest run"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.1.0",
@@ -21,8 +22,11 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^20.11.30",
+    "@types/supertest": "^6.0.3",
     "prisma": "^7.1.0",
+    "supertest": "^7.1.4",
     "tsx": "^4.7.0",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vitest": "^4.0.16"
   }
 }
