@@ -33,4 +33,23 @@ router.get('/', async (req, res, next) => {
   }
 })
 
+// 特定ユーザー取得（GET /users/:id）
+router.get('/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const user = await prisma.user.findUnique({
+      where: { id: Number(id) },
+    })
+
+    if (!user) {
+      res.status(404).json({ error: 'User not found' })
+      return
+    }
+
+    res.json(user)
+  } catch (error) {
+    next(error)
+  }
+})
+
 export default router
